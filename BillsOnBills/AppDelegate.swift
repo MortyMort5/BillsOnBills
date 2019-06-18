@@ -8,12 +8,13 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    let notificationCenter = UNUserNotificationCenter.current()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -27,7 +28,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window?.makeKeyAndVisible()
         
+        let options: UNAuthorizationOptions = [.alert, .sound, .badge]
+        
+        notificationCenter.requestAuthorization(options: options) { (didAllow, error) in
+            if !didAllow {
+                print("User has declined notifications")
+            }
+        }
+        
+        notificationCenter.getNotificationSettings { (settings) in
+            if settings.authorizationStatus != .authorized {
+                print("Notifications are not allowed")
+            }
+        }
+        
+        notificationCenter.delegate = self
+        
         return true
+    }
+    
+    func scheduleNotification(forBill bill: Bill) {
+        let content = UNMutableNotificationContent()
+        content.title = bill.name ?? "Unknow name for bill"
+        content.body = "You owe $\(bill.amountDue) on \(StaticFunctions.convertDateToString(date: bill.dueDate!))"
+        content.sound = UNNotificationSound.default
+        content.badge = 1
+        
+        let triggerDate = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: bill.dueDate ?? Date())
+        
+        // FIXME: - For testing keep repeats to false
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+        
+        let identifier = bill.name ?? "no name"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        
+        notificationCenter.add(request) { (error) in
+            if let error = error {
+                print("Error adding new notification : \(error.localizedDescription)")
+            }
+            print("Added notification successfully")
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -46,6 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -101,3 +142,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound])
+    }
+}

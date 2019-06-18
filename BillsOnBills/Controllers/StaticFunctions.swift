@@ -15,4 +15,19 @@ class StaticFunctions {
         let myString = formatter.string(from: date)
         return myString
     }
+    
+    static func convertStringToDate(stringDate: String) -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = .current
+        dateFormatter.dateFormat = Constants.dateFormat
+        if let date = dateFormatter.date(from: stringDate) {
+            return date
+        }
+        return Date()
+    }
+    
+    static func addAMonthToDate(date: Date) -> Date {
+        guard let newDate = Calendar.current.date(byAdding: .month, value: 1, to: date) else { return Date() }
+        return newDate
+    }
 }

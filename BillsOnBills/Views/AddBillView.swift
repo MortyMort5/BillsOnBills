@@ -10,8 +10,7 @@ import UIKit
 
 
 class AddBillView: UIView, UITextFieldDelegate {
-    static let shared = AddBillView()
-    
+
     func showAddBillView() {
         self.addSubview(transparentView)
         
@@ -41,7 +40,6 @@ class AddBillView: UIView, UITextFieldDelegate {
         self.dueDateTextField.inputView = dueDatePicker
         
         self.nameTextfield.becomeFirstResponder()
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -83,6 +81,12 @@ class AddBillView: UIView, UITextFieldDelegate {
         self.transparentView.removeFromSuperview()
     }
     
+    // MARK: - Properties
+    
+    static let shared = AddBillView()
+    
+    // MARK: - UIViews
+    
     lazy var transparentView: UIView = {
         let view = UIView(frame: UIScreen.main.bounds)
         view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
@@ -114,6 +118,7 @@ class AddBillView: UIView, UITextFieldDelegate {
         textField.placeholder = "due date:"
         textField.borderStyle = .roundedRect
         textField.font = UIFont.systemFont(ofSize: 14)
+        textField.text = StaticFunctions.convertDateToString(date: Date())
         return textField
     }()
     
@@ -121,6 +126,7 @@ class AddBillView: UIView, UITextFieldDelegate {
         let datePicker = UIDatePicker()
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.datePickerMode = .date
+//        datePicker.minimumDate = Date()
         return datePicker
     }()
     

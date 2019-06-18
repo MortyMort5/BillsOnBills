@@ -15,7 +15,6 @@ class BillsTableViewController: UITableViewController {
         
         tableView.separatorStyle = .none
         tableView.register(BillTableViewCell.self, forCellReuseIdentifier: "cell")
-//        tableView.backgroundView = UIImageView(image: #imageLiteral(resourceName: "moneyImage"))
         
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: BillController.shared.newBillAdded, object: nil)
         
@@ -43,11 +42,20 @@ class BillsTableViewController: UITableViewController {
         return 1
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? BillTableViewCell else { return UITableViewCell() }
         
         let bill = BillController.shared.bills[indexPath.section]
+        
+        if bill.dueDate! < Date() {
+            if Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date()) {
+                print("Same Date - \(bill.name ?? "no name")")
+            } else {
+                print("Smaller Date - \(bill.name ?? "no name")")
+            }
+        }
+        
+        
         cell.bill = bill
         
         return cell
@@ -105,6 +113,8 @@ class BillsTableViewController: UITableViewController {
     // MARK: - Properties
     
     var totalBillAmount: Float = 0.00
+    
+    // MARK: - UIViews
     
     let addButton: UIButton = {
         let button = UIButton()

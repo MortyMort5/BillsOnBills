@@ -6,23 +6,21 @@
 //  Copyright © 2019 GitSwifty. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CoreData
 
 class BillController {
-    static let shared = BillController()
-    let newBillAdded = Notification.Name("newBillAdded")
-    
     init() {
         self.bills = fetchBills()
     }
     
     func addBill(name: String, amountDue: Float, dueDate: Date) {
-        let _ = Bill(name: name, amountDue: amountDue, dueDate: dueDate)
+        let bill = Bill(name: name, amountDue: amountDue, dueDate: dueDate)
         saveToPersistentStorage()
         self.bills = fetchBills()
         NotificationCenter.default.post(name: newBillAdded, object: nil)
         NSLog("Notification posted \(newBillAdded)")
+        self.appDelegate?.scheduleNotification(forBill: bill)
         print("Saved Bill Successfully")
     }
     
@@ -32,6 +30,14 @@ class BillController {
         self.bills = fetchBills()
         print("Deleted Bill")
     }
+    
+    func updateBill(bill: Bill) {
+        saveToPersistentStorage()
+        self.bills = fetchBills()
+        print("Updated Bill Successfully")
+    }
+    
+    // MARK: - Private Functions
     
     private func saveToPersistentStorage() {
         do {
@@ -47,5 +53,10 @@ class BillController {
         return (try? Stack.context.fetch(request)) ?? []
     }
     
+    // MARK: - Properties
+    
     var bills: [Bill] = []
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    static let shared = BillController()
+    let newBillAdded = Notification.Name("newBillAdded")
 }

@@ -10,12 +10,6 @@ import UIKit
 
 class BillTableViewCell: UITableViewCell {
     
-    var bill: Bill? {
-        didSet {
-            self.updateView()
-        }
-    }
-    
     func updateView() {
         guard let bill = self.bill else { return }
         self.billNameLabel.text = bill.name
@@ -60,6 +54,14 @@ class BillTableViewCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Properties
+    
+    var bill: Bill? {
+        didSet {
+            self.updateView()
+        }
     }
     
     let billNameLabel: UILabel = {
