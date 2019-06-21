@@ -1,42 +1,36 @@
 //
-//  AddBillView.swift
+//  BillDetailViewController.swift
 //  BillsOnBills
 //
-//  Created by Sterling Mortensen on 6/13/19.
+//  Created by Sterling Mortensen on 6/20/19.
 //  Copyright © 2019 GitSwifty. All rights reserved.
 //
 
 import UIKit
 
+class BillDetailViewController: UIViewController, UITextFieldDelegate {
 
-class AddBillView: UIView, UITextFieldDelegate {
-
-    func showAddBillView() {
-        self.addSubview(transparentView)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = .white
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(addBill))
         
+        updateView()
+    }
+    
+    func updateView() {
         nameTextfield.delegate = self
         amountDueTextfield.delegate = self
         
-        self.buttonStackView.addArrangedSubview(cancelButton)
-        self.buttonStackView.addArrangedSubview(saveButton)
+        stackView.addArrangedSubview(nameTextfield)
+        stackView.addArrangedSubview(amountDueTextfield)
+        stackView.addArrangedSubview(dueDateTextField)
+        self.view.addSubview(stackView)
         
-        self.stackView.addArrangedSubview(nameTextfield)
-        self.stackView.addArrangedSubview(amountDueTextfield)
-        self.stackView.addArrangedSubview(dueDateTextField)
-        self.stackView.addArrangedSubview(buttonStackView)
+        stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 200).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        stackView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.7).isActive = true
         
-        self.transparentView.addSubview(stackView)
-        self.transparentView.bringSubviewToFront(stackView)
-        
-        UIApplication.shared.keyWindow?.addSubview(transparentView)
-        
-        stackView.centerXAnchor.constraint(equalTo: self.transparentView.centerXAnchor).isActive = true
-        stackView.topAnchor.constraint(equalTo: self.transparentView.topAnchor, constant: 200).isActive = true
-        stackView.widthAnchor.constraint(equalTo: self.transparentView.widthAnchor, multiplier: 0.7).isActive = true
-        
-        self.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-        self.saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
-        self.dueDatePicker.addTarget(self, action: #selector(datePickerValueChanged(sender:)), for: .valueChanged)
         self.dueDateTextField.inputView = dueDatePicker
         
         self.nameTextfield.becomeFirstResponder()
@@ -60,17 +54,13 @@ class AddBillView: UIView, UITextFieldDelegate {
         self.dueDateTextField.text = formatter.string(from: sender.date)
     }
     
-    @objc func cancelButtonTapped() {
-        self.transparentView.removeFromSuperview()
-    }
-    
-    @objc func saveButtonTapped() {
+    @objc func addBill() {
         guard let name = nameTextfield.text, !name.isEmpty,
             let amountDueString = amountDueTextfield.text, !amountDueString.isEmpty,
             let dueDateString = dueDateTextField.text, !dueDateString.isEmpty else { return }
         
         guard let amountDueDouble = Float(amountDueString) else { return }
-
+        
         let amountDue = Float(round(100 * amountDueDouble) / 100)
         
         let formatter = DateFormatter()
@@ -78,25 +68,12 @@ class AddBillView: UIView, UITextFieldDelegate {
         guard let date = formatter.date(from: dueDateString) else { return }
         
         BillController.shared.addBill(name: name, amountDue: amountDue, dueDate: date)
-        self.transparentView.removeFromSuperview()
+        navigationController?.popViewController(animated: true)
         
         self.nameTextfield.text = ""
         self.amountDueTextfield.text = ""
         self.dueDateTextField.text = StaticFunctions.convertDateToString(date: Date())
     }
-    
-    // MARK: - Properties
-    
-    static let shared = AddBillView()
-    
-    // MARK: - UIViews
-    
-    lazy var transparentView: UIView = {
-        let view = UIView(frame: UIScreen.main.bounds)
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        view.isUserInteractionEnabled = true
-        return view
-    }()
     
     let nameTextfield: UITextField = {
         let textField = UITextField(frame: CGRect(x: 100, y: 200, width: 50, height: 25))
@@ -130,35 +107,8 @@ class AddBillView: UIView, UITextFieldDelegate {
         let datePicker = UIDatePicker()
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.datePickerMode = .date
-//        datePicker.minimumDate = Date()
+        //        datePicker.minimumDate = Date()
         return datePicker
-    }()
-    
-    let saveButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Save", for: .normal)
-        button.backgroundColor = UIColor.green
-        button.layer.cornerRadius = 5
-        return button
-    }()
-    
-    let cancelButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Cancel", for: .normal)
-        button.backgroundColor = UIColor.red
-        button.layer.cornerRadius = 5
-        return button
-    }()
-    
-    let buttonStackView: UIStackView = {
-        let view = UIStackView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.axis = .horizontal
-        view.distribution = .fillEqually
-        view.spacing = 5
-        return view
     }()
     
     let stackView: UIStackView = {

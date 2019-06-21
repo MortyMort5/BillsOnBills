@@ -22,59 +22,49 @@ class BillsTableViewController: UITableViewController {
         
         self.navigationItem.title = "BILLS"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addButton)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
+        updateViews()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        totalBillAmount = 0
-        totalBillAmount = BillController.shared.bills.reduce(0, { $0 + $1.amountDue})
-        totalLabel.text = String(format: "$%.02f", totalBillAmount)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    func updateViews() {
+        totalLabel.text = BillController.shared.sumOfBills()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: totalLabel)
     }
 
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return BillController.shared.bills.count
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if section == 0 {
+            return BillController.shared.bills.count
+        } else {
+            return 0
+        }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? BillTableViewCell else { return UITableViewCell() }
-        
-        let bill = BillController.shared.bills[indexPath.section]
-        
-        if bill.dueDate! < Date() {
-            if Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date()) {
-                print("Same Date - \(bill.name ?? "no name")")
-            } else {
-                print("Smaller Date - \(bill.name ?? "no name")")
-            }
-        }
-        
-        
+        let bill = BillController.shared.bills[indexPath.row]
         cell.bill = bill
-        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let bill = BillController.shared.bills[indexPath.section]
-            BillController.shared.bills.remove(at: indexPath.section)
-            BillController.shared.deleteBill(bill: bill)
-            
-            let indexSet = NSMutableIndexSet()
-            indexSet.add(indexPath.section)
-            tableView.deleteSections(indexSet as IndexSet, with: .fade)
+            let bill = BillController.shared.bills[indexPath.row]
+            BillController.shared.deleteBill(bill: bill, index: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        print("\(section)")
         return 20.0
     }
     
@@ -97,22 +87,21 @@ class BillsTableViewController: UITableViewController {
     // MARK: - Target Actions
     
     @objc func addButtonTapped() {
-        AddBillView.shared.showAddBillView()
+//        AddBillView.shared.showAddBillView()
+        let detailVC = BillDetailViewController()
+        navigationController?.pushViewController(detailVC, animated: true)
     }
     
     // MARK: - Notification Center
     
     @objc func refreshData() {
         self.tableView.reloadData()
-        totalBillAmount = 0
-        totalBillAmount = BillController.shared.bills.reduce(0, { $0 + $1.amountDue})
-        totalLabel.text = String(format: "$%.02f", totalBillAmount)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: totalLabel)
+        updateViews()
     }
     
     // MARK: - Properties
     
-    var totalBillAmount: Float = 0.00
+    var modifiedBillDateFlag: Bool = false
     
     // MARK: - UIViews
     

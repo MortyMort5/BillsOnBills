@@ -10,36 +10,63 @@ import UIKit
 import CoreData
 
 class BillController {
-    init() {
-        self.bills = fetchBills()
+//    init() {
+//        self.bills = fetchBills()
+//    }
+    
+    func sumOfBills() -> String {
+        let totalAmount = self.bills.reduce(0, { $0 + $1.amountDue})
+        return String(format: "$%.02f", totalAmount)
+    }
+    
+    func sumOfBillsForTheMonth() -> String {
+        var totalMonthlyAmount: Float = 0
+        for bill in self.bills {
+            if bill.isPaid {
+                totalMonthlyAmount = totalMonthlyAmount + bill.amountDue
+            }
+        }
+        return String(format: "$%.02f", totalMonthlyAmount)
+    }
+    
+    func checkandUpdateDates() {
+        for bill in self.bills {
+            if bill.dueDate! < Date() && !Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date())  {
+                bill.dueDate = StaticFunctions.addAMonthToDate(date: bill.dueDate!)
+                BillController.shared.updateBill(bill: bill)
+            }
+        }
     }
     
     func addBill(name: String, amountDue: Float, dueDate: Date) {
         let bill = Bill(name: name, amountDue: amountDue, dueDate: dueDate)
-        saveToPersistentStorage()
-        self.bills = fetchBills()
+        saveToPersistentStore()
+//        self.bills = fetchBills()
         NotificationCenter.default.post(name: newBillAdded, object: nil)
-        NSLog("Notification posted \(newBillAdded)")
-        self.appDelegate?.scheduleNotification(forBill: bill)
+//        self.appDelegate?.scheduleNotification(forBill: bill)
         print("Saved Bill Successfully")
     }
     
-    func deleteBill(bill: Bill) {
+    func deleteBill(bill: Bill, index: Int) {
         bill.managedObjectContext?.delete(bill)
-        saveToPersistentStorage()
-        self.bills = fetchBills()
+        saveToPersistentStore()
         print("Deleted Bill")
     }
     
     func updateBill(bill: Bill) {
-        saveToPersistentStorage()
-        self.bills = fetchBills()
+        saveToPersistentStore()
+//        self.bills = fetchBills()
         print("Updated Bill Successfully")
+    }
+    
+    func togglePaidBill(bill: Bill) {
+        bill.isPaid = !bill.isPaid
+        saveToPersistentStore()
     }
     
     // MARK: - Private Functions
     
-    private func saveToPersistentStorage() {
+    private func saveToPersistentStore() {
         do {
             try Stack.context.save()
         } catch let error {
@@ -55,7 +82,12 @@ class BillController {
     
     // MARK: - Properties
     
-    var bills: [Bill] = []
+    var bills: [Bill] {
+        let request: NSFetchRequest<Bill> = Bill.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "dueDate", ascending: true)]
+        return (try? Stack.context.fetch(request)) ?? []
+    }
+    
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     static let shared = BillController()
     let newBillAdded = Notification.Name("newBillAdded")

@@ -20,6 +20,7 @@
 		B37DBA1B22B2D2E300524C46 /* AddBillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA1A22B2D2E300524C46 /* AddBillView.swift */; };
 		B37DBA2022B302FA00524C46 /* StaticFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA1F22B302FA00524C46 /* StaticFunctions.swift */; };
 		B37DBA2222B303B300524C46 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA2122B303B300524C46 /* Constants.swift */; };
+		C85C3AB422BC64AE00B2C7CB /* BillDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85C3AB322BC64AE00B2C7CB /* BillDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		B37DBA1A22B2D2E300524C46 /* AddBillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBillView.swift; sourceTree = "<group>"; };
 		B37DBA1F22B302FA00524C46 /* StaticFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticFunctions.swift; sourceTree = "<group>"; };
 		B37DBA2122B303B300524C46 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		C85C3AB322BC64AE00B2C7CB /* BillDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				B37DBA0422B2BD6000524C46 /* BillsTableViewController.swift */,
+				C85C3AB322BC64AE00B2C7CB /* BillDetailViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 				B37DBA2222B303B300524C46 /* Constants.swift in Sources */,
 				B37DB9EE22B2BCFE00524C46 /* AppDelegate.swift in Sources */,
 				B37DBA0522B2BD6000524C46 /* BillsTableViewController.swift in Sources */,
+				C85C3AB422BC64AE00B2C7CB /* BillDetailViewController.swift in Sources */,
 				B37DBA1B22B2D2E300524C46 /* AddBillView.swift in Sources */,
 				B37DBA1822B2C17200524C46 /* Bill+Convenience.swift in Sources */,
 				B37DB9F622B2BCFE00524C46 /* BillsOnBills.xcdatamodeld in Sources */,

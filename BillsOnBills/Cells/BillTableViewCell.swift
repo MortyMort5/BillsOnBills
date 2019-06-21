@@ -64,6 +64,8 @@ class BillTableViewCell: UITableViewCell {
         }
     }
     
+    // MARK: - UIViews
+    
     let billNameLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
