@@ -15,6 +15,17 @@ class BillTableViewCell: UITableViewCell {
         self.billNameLabel.text = bill.name
         self.amountDueLabel.text = String(format: "$%.02f", bill.amountDue)
         self.dueDateLabel.text = StaticFunctions.convertDateToString(date: bill.dueDate!)
+        
+        if bill.isPaid {
+            self.paidButton.setTitle("Paid", for: .normal)
+        } else {
+            self.paidButton.setTitle("Pay", for: .normal)
+        }
+        paidButton.addTarget(self, action: #selector(paidButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func paidButtonTapped() {
+        delegate?.paidButtonTapped(sender: self)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -22,20 +33,11 @@ class BillTableViewCell: UITableViewCell {
         self.contentView.addSubview(billNameLabel)
         self.contentView.addSubview(amountDueLabel)
         self.contentView.addSubview(dueDateLabel)
+        self.contentView.addSubview(paidButton)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        self.contentView.backgroundColor = UIColor.white
-        self.contentView.layer.cornerRadius = 5
-        self.contentView.layer.shadowOffset = CGSize(width: 1, height: 0)
-        self.contentView.layer.shadowColor = UIColor.black.cgColor
-        self.contentView.layer.shadowRadius = 5
-        self.contentView.layer.shadowOpacity = 0.25
-        let shadowFrame: CGRect = self.contentView.layer.bounds
-        let shadowPath: CGPath = UIBezierPath(rect: shadowFrame).cgPath
-        self.contentView.layer.shadowPath = shadowPath
         
         billNameLabel.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor).isActive = true
         billNameLabel.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor, constant: 2.0).isActive = true
@@ -44,8 +46,14 @@ class BillTableViewCell: UITableViewCell {
         
         amountDueLabel.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor).isActive = true
         amountDueLabel.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor).isActive = true
-        amountDueLabel.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor).isActive = true
-        amountDueLabel.widthAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.3).isActive = true
+//        amountDueLabel.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor).isActive = true
+//        amountDueLabel.widthAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.3).isActive = true
+        
+        paidButton.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor).isActive = true
+        paidButton.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor).isActive = true
+        paidButton.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor).isActive = true
+        paidButton.leadingAnchor.constraint(equalTo: self.amountDueLabel.trailingAnchor).isActive = true
+        paidButton.widthAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.3).isActive = true
         
         dueDateLabel.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor).isActive = true
         dueDateLabel.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor).isActive = true
@@ -64,6 +72,8 @@ class BillTableViewCell: UITableViewCell {
         }
     }
     
+    weak var delegate: BillCellDelegate?
+    
     // MARK: - UIViews
     
     let billNameLabel: UILabel = {
@@ -72,6 +82,7 @@ class BillTableViewCell: UITableViewCell {
         label.font = UIFont(name: Constants.universalFont, size: 24)
         label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true
+        label.textColor = Constants.grayMainColor
         return label
     }()
     
@@ -80,7 +91,7 @@ class BillTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: Constants.universalFont, size: 40)
         label.textAlignment = .center
-        label.textColor = UIColor.red
+        label.textColor = Constants.blueMainColor
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -94,4 +105,16 @@ class BillTableViewCell: UITableViewCell {
         label.textColor = UIColor.lightGray
         return label
     }()
+    
+    let paidButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 5
+        button.backgroundColor = Constants.yellowMainColor
+        return button
+    }()
+}
+
+protocol BillCellDelegate: class {
+    func paidButtonTapped(sender: BillTableViewCell)
 }

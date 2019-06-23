@@ -8,12 +8,12 @@
 
 import UIKit
 
-class BillsTableViewController: UITableViewController {
-    
+class BillsTableViewController: UITableViewController, BillCellDelegate {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.separatorStyle = .none
+//        tableView.separatorStyle = .none
         tableView.register(BillTableViewCell.self, forCellReuseIdentifier: "cell")
         
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: BillController.shared.newBillAdded, object: nil)
@@ -34,43 +34,66 @@ class BillsTableViewController: UITableViewController {
         totalLabel.text = BillController.shared.sumOfBills()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: totalLabel)
     }
+    
+    // MARK: - Table View Cell Delegate Functions
+    
+    func paidButtonTapped(sender: BillTableViewCell) {
+        guard let bill = sender.bill else { return }
+        BillController.shared.togglePaidBill(bill: bill)
+        self.tableView.reloadData()
+    }
 
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return BillController.shared.groupedBills.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return BillController.shared.bills.count
+            return BillController.shared.groupedBills[section].count
         } else {
-            return 0
+            return BillController.shared.groupedBills[section].count
         }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? BillTableViewCell else { return UITableViewCell() }
-        let bill = BillController.shared.bills[indexPath.row]
+        let bill = BillController.shared.groupedBills[indexPath.section][indexPath.row]
         cell.bill = bill
+        cell.delegate = self
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let bill = BillController.shared.bills[indexPath.row]
-            BillController.shared.deleteBill(bill: bill, index: indexPath.row)
+            let bill = BillController.shared.groupedBills[indexPath.section][indexPath.row]
+            BillController.shared.deleteBill(bill: bill)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20.0
+        return 50.0
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView()
-        headerView.backgroundColor = .clear
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 50))
+        headerView.backgroundColor = .lightGray
+        
+        let sectionTitle = UILabel(frame: CGRect(x: 0, y: 5, width: headerView.bounds.size.width, height: headerView.bounds.size.height))
+        sectionTitle.textAlignment = .center
+        sectionTitle.font = UIFont(name: Constants.universalFont, size: 30)
+        sectionTitle.textColor = Constants.grayMainColor
+        
+        headerView.addSubview(sectionTitle)
+    
+        if section == 0 {
+            sectionTitle.text = "Unpaid - \(BillController.shared.sumOfBillsUnpaid())"
+        } else {
+            sectionTitle.text = "Paid - \(BillController.shared.sumOfBillsPaid())"
+        }
+
         return headerView
     }
     

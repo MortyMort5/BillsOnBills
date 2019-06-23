@@ -31,6 +31,7 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
         stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         stackView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.7).isActive = true
         
+        self.dueDatePicker.addTarget(self, action: #selector(datePickerValueChanged(sender:)), for: .valueChanged)
         self.dueDateTextField.inputView = dueDatePicker
         
         self.nameTextfield.becomeFirstResponder()
@@ -76,7 +77,7 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
     }
     
     let nameTextfield: UITextField = {
-        let textField = UITextField(frame: CGRect(x: 100, y: 200, width: 50, height: 25))
+        let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "bill name:"
         textField.borderStyle = .roundedRect
@@ -85,7 +86,7 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
     }()
     
     let amountDueTextfield: UITextField = {
-        let textField = UITextField(frame: CGRect(x: 100, y: 300, width: 50, height: 25))
+        let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "amount due each month:"
         textField.borderStyle = .roundedRect
@@ -94,7 +95,7 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
     }()
     
     let dueDateTextField: UITextField = {
-        let textField = UITextField(frame: CGRect(x: 100, y: 400, width: 50, height: 25))
+        let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "due date:"
         textField.borderStyle = .roundedRect
@@ -107,7 +108,7 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
         let datePicker = UIDatePicker()
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.datePickerMode = .date
-        //        datePicker.minimumDate = Date()
+        datePicker.minimumDate = Date()
         return datePicker
     }()
     
