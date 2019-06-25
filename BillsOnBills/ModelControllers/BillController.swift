@@ -21,7 +21,7 @@ class BillController {
         let bill = Bill(name: name, amountDue: amountDue, dueDate: dueDate)
         saveToPersistentStore()
         NotificationCenter.default.post(name: newBillAdded, object: nil)
-        //        self.appDelegate?.scheduleNotification(forBill: bill)
+        self.appDelegate?.scheduleNotification(forBill: bill)
         print("Saved Bill Successfully")
     }
     
@@ -76,7 +76,7 @@ class BillController {
     
     func checkBillDates() {
         for bill in self.bills {
-            if bill.dueDate! < Date() && !Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date())  {
+            if bill.dueDate! < Date() && !Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date()) && bill.isPaid  {
                 bill.dueDate = self.updateDateOfBill(bill: bill)
                 self.updateBill(bill: bill)
             }

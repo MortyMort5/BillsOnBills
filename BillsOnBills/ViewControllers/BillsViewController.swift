@@ -1,5 +1,5 @@
 //
-//  BillsTableViewController.swift
+//  BillsViewController.swift
 //  BillsOnBills
 //
 //  Created by Sterling Mortensen on 6/13/19.
@@ -8,13 +8,22 @@
 
 import UIKit
 
-class BillsTableViewController: UITableViewController, BillCellDelegate {
+class BillsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, BillCellDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        tableView.separatorStyle = .none
+        let barHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
+        let displayWidth: CGFloat = self.view.frame.width
+        let displayHeight: CGFloat = self.view.frame.height
+        
+        tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
         tableView.register(BillTableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.delegate = self
+        tableView.dataSource = self
+        self.view.addSubview(tableView)
+        
+//        tableView.separatorStyle = .singleLine
         
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: BillController.shared.newBillAdded, object: nil)
         
@@ -45,11 +54,11 @@ class BillsTableViewController: UITableViewController, BillCellDelegate {
 
     // MARK: - Table view data source
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return BillController.shared.groupedBills.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return BillController.shared.groupedBills[section].count
         } else {
@@ -57,7 +66,7 @@ class BillsTableViewController: UITableViewController, BillCellDelegate {
         }
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? BillTableViewCell else { return UITableViewCell() }
         let bill = BillController.shared.groupedBills[indexPath.section][indexPath.row]
         cell.bill = bill
@@ -65,7 +74,7 @@ class BillsTableViewController: UITableViewController, BillCellDelegate {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let bill = BillController.shared.groupedBills[indexPath.section][indexPath.row]
             BillController.shared.deleteBill(bill: bill)
@@ -73,11 +82,11 @@ class BillsTableViewController: UITableViewController, BillCellDelegate {
         }
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50.0
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 50))
         headerView.backgroundColor = .lightGray
         
@@ -97,7 +106,7 @@ class BillsTableViewController: UITableViewController, BillCellDelegate {
         return headerView
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70.0
     }
     
@@ -125,6 +134,7 @@ class BillsTableViewController: UITableViewController, BillCellDelegate {
     // MARK: - Properties
     
     var modifiedBillDateFlag: Bool = false
+    private var tableView: UITableView!
     
     // MARK: - UIViews
     
@@ -139,7 +149,7 @@ class BillsTableViewController: UITableViewController, BillCellDelegate {
     
     let totalLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: Constants.universalFont, size: 20)
+        label.font = UIFont(name: Constants.universalFont, size: 15)
         label.textColor = .black
         label.text = "$0.00"
         label.translatesAutoresizingMaskIntoConstraints = false

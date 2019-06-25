@@ -13,7 +13,7 @@
 		B37DB9F822B2BCFF00524C46 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B37DB9F722B2BCFF00524C46 /* Assets.xcassets */; };
 		B37DB9FB22B2BCFF00524C46 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B37DB9F922B2BCFF00524C46 /* LaunchScreen.storyboard */; };
 		B37DBA0322B2BD4F00524C46 /* BillTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA0222B2BD4F00524C46 /* BillTableViewCell.swift */; };
-		B37DBA0522B2BD6000524C46 /* BillsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA0422B2BD6000524C46 /* BillsTableViewController.swift */; };
+		B37DBA0522B2BD6000524C46 /* BillsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA0422B2BD6000524C46 /* BillsViewController.swift */; };
 		B37DBA0F22B2C05800524C46 /* BillController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA0E22B2C05800524C46 /* BillController.swift */; };
 		B37DBA1622B2C13000524C46 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA1522B2C13000524C46 /* Stack.swift */; };
 		B37DBA1822B2C17200524C46 /* Bill+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA1722B2C17200524C46 /* Bill+Convenience.swift */; };
@@ -32,7 +32,7 @@
 		B37DB9FA22B2BCFF00524C46 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B37DB9FC22B2BCFF00524C46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B37DBA0222B2BD4F00524C46 /* BillTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillTableViewCell.swift; sourceTree = "<group>"; };
-		B37DBA0422B2BD6000524C46 /* BillsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillsTableViewController.swift; sourceTree = "<group>"; };
+		B37DBA0422B2BD6000524C46 /* BillsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillsViewController.swift; sourceTree = "<group>"; };
 		B37DBA0E22B2C05800524C46 /* BillController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillController.swift; sourceTree = "<group>"; };
 		B37DBA1522B2C13000524C46 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		B37DBA1722B2C17200524C46 /* Bill+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bill+Convenience.swift"; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 		B37DBA1322B2C06000524C46 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B37DBA0422B2BD6000524C46 /* BillsTableViewController.swift */,
+				B37DBA0422B2BD6000524C46 /* BillsViewController.swift */,
 				C85C3AB322BC64AE00B2C7CB /* BillDetailViewController.swift */,
 			);
 			path = ViewControllers;
@@ -213,7 +213,7 @@
 				B37DBA0322B2BD4F00524C46 /* BillTableViewCell.swift in Sources */,
 				B37DBA2222B303B300524C46 /* Constants.swift in Sources */,
 				B37DB9EE22B2BCFE00524C46 /* AppDelegate.swift in Sources */,
-				B37DBA0522B2BD6000524C46 /* BillsTableViewController.swift in Sources */,
+				B37DBA0522B2BD6000524C46 /* BillsViewController.swift in Sources */,
 				C85C3AB422BC64AE00B2C7CB /* BillDetailViewController.swift in Sources */,
 				B37DBA1822B2C17200524C46 /* Bill+Convenience.swift in Sources */,
 				B37DB9F622B2BCFE00524C46 /* BillsOnBills.xcdatamodeld in Sources */,
@@ -369,6 +369,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5H73PY6T7Z;
 				INFOPLIST_FILE = BillsOnBills/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -387,6 +388,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5H73PY6T7Z;
 				INFOPLIST_FILE = BillsOnBills/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

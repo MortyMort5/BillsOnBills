@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let billsVC = BillsTableViewController()
+        let billsVC = BillsViewController()
         
         let navController = UINavigationController(rootViewController: billsVC)
         
