@@ -20,6 +20,8 @@
 		B37DBA2022B302FA00524C46 /* StaticFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA1F22B302FA00524C46 /* StaticFunctions.swift */; };
 		B37DBA2222B303B300524C46 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37DBA2122B303B300524C46 /* Constants.swift */; };
 		C814E94622BEBB8B00D2CACE /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = C814E94522BEBB8B00D2CACE /* Enums.swift */; };
+		C84A192A22C2D08800707B2C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84A192922C2D08800707B2C /* Extensions.swift */; };
+		C84A192C22C2E26000707B2C /* User+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84A192B22C2E26000707B2C /* User+Convenience.swift */; };
 		C85C3AB422BC64AE00B2C7CB /* BillDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85C3AB322BC64AE00B2C7CB /* BillDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +41,8 @@
 		B37DBA1F22B302FA00524C46 /* StaticFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticFunctions.swift; sourceTree = "<group>"; };
 		B37DBA2122B303B300524C46 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C814E94522BEBB8B00D2CACE /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		C84A192922C2D08800707B2C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		C84A192B22C2E26000707B2C /* User+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Convenience.swift"; sourceTree = "<group>"; };
 		C85C3AB322BC64AE00B2C7CB /* BillDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,6 +104,7 @@
 				B37DB9F422B2BCFE00524C46 /* BillsOnBills.xcdatamodeld */,
 				B37DBA1522B2C13000524C46 /* Stack.swift */,
 				B37DBA1722B2C17200524C46 /* Bill+Convenience.swift */,
+				C84A192B22C2E26000707B2C /* User+Convenience.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -135,6 +140,7 @@
 				B37DBA1F22B302FA00524C46 /* StaticFunctions.swift */,
 				B37DBA2122B303B300524C46 /* Constants.swift */,
 				C814E94522BEBB8B00D2CACE /* Enums.swift */,
+				C84A192922C2D08800707B2C /* Extensions.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -217,9 +223,11 @@
 				C85C3AB422BC64AE00B2C7CB /* BillDetailViewController.swift in Sources */,
 				B37DBA1822B2C17200524C46 /* Bill+Convenience.swift in Sources */,
 				B37DB9F622B2BCFE00524C46 /* BillsOnBills.xcdatamodeld in Sources */,
+				C84A192A22C2D08800707B2C /* Extensions.swift in Sources */,
 				B37DBA1622B2C13000524C46 /* Stack.swift in Sources */,
 				B37DBA2022B302FA00524C46 /* StaticFunctions.swift in Sources */,
 				C814E94622BEBB8B00D2CACE /* Enums.swift in Sources */,
+				C84A192C22C2E26000707B2C /* User+Convenience.swift in Sources */,
 				B37DBA0F22B2C05800524C46 /* BillController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

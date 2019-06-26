@@ -12,7 +12,47 @@ import CoreData
 class BillController {
     
     init() {
-        self.checkBillDates()
+        checkLoginDateForUser()
+    }
+    
+    // MARK: - Manage User
+    
+    func addUser() {
+        let _ = User(lastLoggedInDate: Date())
+        saveToPersistentStore()
+        print("Created User")
+    }
+    
+    func updateUser(user: User) {
+        user.lastLoggedInDate = Date()
+        saveToPersistentStore()
+        print("Updated User")
+    }
+    
+    func checkLoginDateForUser() {
+        print("6")
+        if let user = self.user {
+            print("1")
+            if let lastDate = user.lastLoggedInDate {
+                print("2")
+                if !lastDate.isInSameMonth(date: Date()) {
+                    print("3")
+                    // new month since logged in last
+                    // update users lastLoggedInDate property
+                    self.updateUser(user: user)
+                    // update all the bills dates to this month
+                    self.checkBillDates()
+                }
+            } else {
+                print("4")
+                // no last logged in Date
+                self.updateUser(user: user)
+            }
+        } else {
+            print("5")
+            // no User
+            self.addUser()
+        }
     }
     
     // MARK: - C.R.U.D
@@ -49,7 +89,7 @@ class BillController {
     
     func sumOfBills() -> String {
         let totalAmount = self.bills.reduce(0, { $0 + $1.amountDue})
-        return "Total: \(String(format: "$%.02f", totalAmount))"
+        return "Total: \n\(String(format: "$%.02f", totalAmount))"
     }
     
     func sumOfBillsUnpaid() -> String {
@@ -95,6 +135,16 @@ class BillController {
         return bill.dueDate!
     }
     
+    // MARK: - Reset all Data
+    
+    func resetAllBillsForNewMonth() {
+        /*
+         - add a month to all the dates
+         - change all isPaid properties to false
+         */
+        
+    }
+    
     // MARK: - Helper Functions
     
     func togglePaidBill(bill: Bill) {
@@ -137,6 +187,13 @@ class BillController {
         let request: NSFetchRequest<Bill> = Bill.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "dueDate", ascending: true)]
         return (try? Stack.context.fetch(request)) ?? []
+    }
+    
+    var user: User? {
+        let request: NSFetchRequest<User> = User.fetchRequest()
+        let users = (try? Stack.context.fetch(request)) ?? []
+        guard let user = users.first else { return nil }
+        return user
     }
     
     // MARK: - Properties

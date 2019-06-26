@@ -8,7 +8,8 @@
 
 import UIKit
 
-class BillDetailViewController: UIViewController, UITextFieldDelegate {
+class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,20 +23,26 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
         nameTextfield.delegate = self
         amountDueTextfield.delegate = self
         
+        dayPickerView.delegate = self
+        dayPickerView.dataSource = self
+        
         stackView.addArrangedSubview(nameTextfield)
         stackView.addArrangedSubview(amountDueTextfield)
         stackView.addArrangedSubview(dueDateTextField)
+        stackView.addArrangedSubview(dayPickerView)
         self.view.addSubview(stackView)
         
         stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 200).isActive = true
         stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         stackView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.7).isActive = true
         
-        self.dueDatePicker.addTarget(self, action: #selector(datePickerValueChanged(sender:)), for: .valueChanged)
-        self.dueDateTextField.inputView = dueDatePicker
+        self.updateDueDateTextField(day: Calendar.current.component(.day, from: Date()))
+        dayPickerView.selectRow(Calendar.current.component(.day, from: Date()) - 1, inComponent: 0, animated: true)
         
         self.nameTextfield.becomeFirstResponder()
     }
+    
+    // MARK: - Delegate Functions
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
@@ -49,11 +56,42 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
         return false
     }
     
-    @objc func datePickerValueChanged(sender: UIDatePicker) {
-        let formatter = DateFormatter()
-        formatter.dateFormat =  Constants.dateFormat
-        self.dueDateTextField.text = formatter.string(from: sender.date)
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
     }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 27
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        var arr = [Int]()
+        arr += 1...27
+        return "\(arr[row])"
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print(row)
+        self.updateDueDateTextField(day: row + 1)
+    }
+    
+    func updateDueDateTextField(day: Int) {
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: Date())
+        let year = calendar.component(.year, from: Date())
+        self.dueDateTextField.text = "\(month) / \(day) / \(year)"
+    }
+    
+    
+//    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+//        return 36.0
+//    }
+//
+//    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+//        return 30
+//    }
+    
+    // MARK: - Action Selector Functions
     
     @objc func addBill() {
         guard let name = nameTextfield.text, !name.isEmpty,
@@ -75,6 +113,8 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
         self.amountDueTextfield.text = ""
         self.dueDateTextField.text = StaticFunctions.convertDateToString(date: Date())
     }
+    
+    // MARK: - UIViews
     
     let nameTextfield: UITextField = {
         let textField = UITextField()
@@ -104,20 +144,19 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate {
         return textField
     }()
     
-    let dueDatePicker: UIDatePicker = {
-        let datePicker = UIDatePicker()
-        datePicker.translatesAutoresizingMaskIntoConstraints = false
-        datePicker.datePickerMode = .date
-        datePicker.minimumDate = Date()
-        return datePicker
-    }()
-    
     let stackView: UIStackView = {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .vertical
-        view.distribution = .fillEqually
+        view.distribution = .fillProportionally
         view.spacing = 5
         return view
+    }()
+    
+    let dayPickerView: UIPickerView = {
+        let picker = UIPickerView()
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.backgroundColor = .white
+        return picker
     }()
 }
