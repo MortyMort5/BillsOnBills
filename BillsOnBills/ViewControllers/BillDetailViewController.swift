@@ -10,39 +10,15 @@ import UIKit
 
 class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(addBill))
-        
-        updateView()
+    
+        setUpView()
     }
     
-    func updateView() {
-        nameTextfield.delegate = self
-        amountDueTextfield.delegate = self
-        
-        dayPickerView.delegate = self
-        dayPickerView.dataSource = self
-        
-        stackView.addArrangedSubview(nameTextfield)
-        stackView.addArrangedSubview(amountDueTextfield)
-        stackView.addArrangedSubview(dueDateTextField)
-        stackView.addArrangedSubview(dayPickerView)
-        self.view.addSubview(stackView)
-        
-        stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 200).isActive = true
-        stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        stackView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.7).isActive = true
-        
-        self.updateDueDateTextField(day: Calendar.current.component(.day, from: Date()))
-        dayPickerView.selectRow(Calendar.current.component(.day, from: Date()) - 1, inComponent: 0, animated: true)
-        
-        self.nameTextfield.becomeFirstResponder()
-    }
-    
-    // MARK: - Delegate Functions
+    // MARK: - Text Field Delegate
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
@@ -55,6 +31,8 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         }
         return false
     }
+    
+    // MARK: - UIPickerView Delegate
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -75,22 +53,6 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         self.updateDueDateTextField(day: row + 1)
     }
     
-    func updateDueDateTextField(day: Int) {
-        let calendar = Calendar.current
-        let month = calendar.component(.month, from: Date())
-        let year = calendar.component(.year, from: Date())
-        self.dueDateTextField.text = "\(month) / \(day) / \(year)"
-    }
-    
-    
-//    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-//        return 36.0
-//    }
-//
-//    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-//        return 30
-//    }
-    
     // MARK: - Action Selector Functions
     
     @objc func addBill() {
@@ -98,7 +60,10 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
             let amountDueString = amountDueTextfield.text, !amountDueString.isEmpty,
             let dueDateString = dueDateTextField.text, !dueDateString.isEmpty else { return }
         
-        guard let amountDueDouble = Float(amountDueString) else { return }
+        var amountDueStr = amountDueString
+        amountDueStr.remove(at: amountDueStr.startIndex)
+        
+        guard let amountDueDouble = Float(amountDueStr) else { return }
         
         let amountDue = Float(round(100 * amountDueDouble) / 100)
         
@@ -106,12 +71,81 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         formatter.dateFormat =  Constants.dateFormat
         guard let date = formatter.date(from: dueDateString) else { return }
         
-        BillController.shared.addBill(name: name, amountDue: amountDue, dueDate: date)
+        if let bill = self.bill {
+            // modify bill
+            bill.name = name
+            bill.amountDue = amountDue
+            bill.dueDate = date
+            BillController.shared.updateBill(bill: bill)
+        } else {
+            // create bill
+            BillController.shared.addBill(name: name, amountDue: amountDue, dueDate: date)
+        }
+
         navigationController?.popViewController(animated: true)
         
         self.nameTextfield.text = ""
         self.amountDueTextfield.text = ""
         self.dueDateTextField.text = StaticFunctions.convertDateToString(date: Date())
+    }
+    
+    @objc func amountDueTextFieldDidChange(_ textField: UITextField) {
+        if let amountString = textField.text?.currencyInputFormatting() {
+            textField.text = amountString
+        }
+    }
+    
+    // MARK: - Helper Functions
+    
+    func updateDueDateTextField(day: Int) {
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: Date())
+        let year = calendar.component(.year, from: Date())
+        self.dueDateTextField.text = "\(month) / \(day) / \(year)"
+    }
+    
+    func setUpView() {
+        nameTextfield.delegate = self
+        amountDueTextfield.delegate = self
+        
+        dayPickerView.delegate = self
+        dayPickerView.dataSource = self
+        
+        stackView.addArrangedSubview(nameTextfield)
+        stackView.addArrangedSubview(amountDueTextfield)
+        stackView.addArrangedSubview(dueDateTextField)
+        stackView.addArrangedSubview(dayPickerView)
+        self.view.addSubview(stackView)
+        
+        stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 150).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        stackView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.7).isActive = true
+        
+        self.updateDueDateTextField(day: Calendar.current.component(.day, from: Date()))
+        dayPickerView.selectRow(Calendar.current.component(.day, from: Date()) - 1, inComponent: 0, animated: true)
+        
+        amountDueTextfield.addTarget(self, action: #selector(amountDueTextFieldDidChange(_:)), for: .editingChanged)
+        
+        self.nameTextfield.becomeFirstResponder()
+    }
+    
+    func updateView() {
+        guard let bill = self.bill else { return }
+        nameTextfield.text = bill.name
+        amountDueTextfield.text = String(format: "$%.02f", bill.amountDue)
+        self.updateDueDateTextField(day: Calendar.current.component(.day, from: bill.dueDate!))
+        dayPickerView.selectRow(Calendar.current.component(.day, from: bill.dueDate!) - 1, inComponent: 0, animated: true)
+    }
+    
+    // MARK: - Properties
+    
+    var bill: Bill? {
+        didSet {
+            if !isViewLoaded {
+                loadViewIfNeeded()
+                self.updateView()
+            }
+        }
     }
     
     // MARK: - UIViews

@@ -24,7 +24,6 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.view.addSubview(tableView)
         
         let topView: UIView = UIView(frame: CGRect(x: 0, y: barHeight + barHeight, width: displayWidth, height: 120))
-//        topView = UIView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: 150))
         topView.addSubview(totalLabel)
         topView.backgroundColor = Constants.blueColor
         self.view.addSubview(topView)
@@ -34,7 +33,6 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         totalLabel.text = BillController.shared.sumOfBills()
         
-        
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: BillController.shared.newBillAdded, object: nil)
         
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
@@ -42,14 +40,6 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.navigationItem.title = "BILLS"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addButton)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
-    }
-
-    // MARK: - Table View Cell Delegate Functions
-    
-    func paidButtonTapped(sender: BillTableViewCell) {
-        guard let bill = sender.bill else { return }
-        BillController.shared.togglePaidBill(bill: bill)
-        self.tableView.reloadData()
     }
 
     // MARK: - Table view data source
@@ -90,18 +80,13 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: sectionHeaderHeight))
         headerView.backgroundColor = Constants.lightGrayColor
         
-        let sectionTitle = UILabel()
-        sectionTitle.translatesAutoresizingMaskIntoConstraints = false
-        sectionTitle.textAlignment = .center
-        sectionTitle.font = UIFont(name: Constants.universalFont, size: 15)
-        sectionTitle.textColor = Constants.grayMainColor
-        
         headerView.addSubview(sectionTitle)
         
         sectionTitle.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
         sectionTitle.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
     
         if section == 0 {
+            // FIXME: - This is not showing up in the section header for some reason
             sectionTitle.text = "Unpaid - \(BillController.shared.sumOfBillsUnpaid())"
         } else {
             sectionTitle.text = "Paid - \(BillController.shared.sumOfBillsPaid())"
@@ -114,10 +99,21 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         return 70.0
     }
     
-    // MARK: - Navigation
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailVC = BillDetailViewController()
+        navigationController?.pushViewController(detailVC, animated: true)
+        let bill = BillController.shared.groupedBills[indexPath.section][indexPath.row]
+        detailVC.bill = bill
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
+    // MARK: - Table View Cell Delegate Functions
+    
+    func paidButtonTapped(sender: BillTableViewCell) {
+        guard let bill = sender.bill else { return }
+        BillController.shared.togglePaidBill(bill: bill)
+        self.tableView.reloadData()
     }
     
     // MARK: - Target Actions
@@ -137,7 +133,7 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
     // MARK: - Properties
     
     private var tableView: UITableView!
-    private let sectionHeaderHeight: CGFloat = 20
+    private let sectionHeaderHeight: CGFloat = 30
     
     // MARK: - UIViews
     
@@ -159,6 +155,15 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         label.sizeToFit()
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let sectionTitle: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.font = UIFont(name: Constants.universalFont, size: 15)
+        label.textColor = Constants.grayMainColor
         return label
     }()
 }

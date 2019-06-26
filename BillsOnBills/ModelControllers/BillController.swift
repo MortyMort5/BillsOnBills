@@ -82,6 +82,7 @@ class BillController {
     
     func updateBill(bill: Bill) {
         saveToPersistentStore()
+        NotificationCenter.default.post(name: newBillAdded, object: nil)
         print("Updated Bill Successfully")
     }
     
