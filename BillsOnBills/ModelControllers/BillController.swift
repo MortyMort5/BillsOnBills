@@ -18,13 +18,13 @@ class BillController {
     // MARK: - Manage User
     
     func addUser() {
-        let _ = User(lastLoggedInDate: Date())
+        let _ = User(lastLoggedInDate: StaticFunctions.getCurrentDate())
         saveToPersistentStore()
         print("Created User")
     }
     
     func updateUser(user: User) {
-        user.lastLoggedInDate = Date()
+        user.lastLoggedInDate = StaticFunctions.getCurrentDate()
         saveToPersistentStore()
         print("Updated User")
     }
@@ -41,7 +41,7 @@ class BillController {
                     // update users lastLoggedInDate property
                     self.updateUser(user: user)
                     // update all the bills dates to this month
-                    self.checkBillDates()
+//                    self.updateBillDates()
                 }
             } else {
                 print("4")
@@ -115,12 +115,20 @@ class BillController {
     
     // MARK: - Date Modifier Functions
     
-    func checkBillDates() {
+//    if bill.dueDate! < Date() && !Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date()) && bill.isPaid  {
+//    bill.dueDate = self.updateDateOfBill(bill: bill)
+//    self.updateBill(bill: bill)
+//    }
+//    if bill.dueDate!.isInSameMonth(date: Date()) {
+//
+//    }
+    
+    func updateBillDates() {
         for bill in self.bills {
-            if bill.dueDate! < Date() && !Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date()) && bill.isPaid  {
-                bill.dueDate = self.updateDateOfBill(bill: bill)
-                self.updateBill(bill: bill)
-            }
+            /*
+             - add months to each bill date until bill.dueDate is in the same month as Date()
+             - Set all isPaid properties to false
+             */
         }
     }
     
@@ -143,7 +151,6 @@ class BillController {
          - add a month to all the dates
          - change all isPaid properties to false
          */
-        
     }
     
     // MARK: - Helper Functions
@@ -186,7 +193,6 @@ class BillController {
     
     var bills: [Bill] {
         let request: NSFetchRequest<Bill> = Bill.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "dueDate", ascending: true)]
         return (try? Stack.context.fetch(request)) ?? []
     }
     

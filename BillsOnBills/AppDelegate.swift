@@ -59,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         content.sound = UNNotificationSound.default
         content.badge = 1
         
-        let triggerDate = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: bill.dueDate ?? Date())
+        let triggerDate = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: bill.dueDate!)
         
         // FIXME: - For testing keep repeats to false
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)

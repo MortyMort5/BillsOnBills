@@ -56,6 +56,8 @@ class BillTableViewCell: UITableViewCell {
         dueDateLabel.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor).isActive = true
         dueDateLabel.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor).isActive = true
         dueDateLabel.trailingAnchor.constraint(equalTo: self.amountDueLabel.leadingAnchor).isActive = true
+        
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -107,8 +109,9 @@ class BillTableViewCell: UITableViewCell {
     let paidButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 5
         button.backgroundColor = Constants.yellowMainColor
+        button.layer.cornerRadius = 5
+        button.contentMode = .scaleAspectFit
         return button
     }()
 }

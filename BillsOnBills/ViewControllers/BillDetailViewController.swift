@@ -117,6 +117,10 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         stackView.addArrangedSubview(dayPickerView)
         self.view.addSubview(stackView)
         
+        var frameRect = nameTextfield.frame
+        frameRect.size.height = 300
+        nameTextfield.frame = frameRect
+        
         stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 150).isActive = true
         stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         stackView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.7).isActive = true
@@ -155,7 +159,6 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "bill name:"
         textField.borderStyle = .roundedRect
-        textField.font = UIFont.systemFont(ofSize: 14)
         return textField
     }()
     
@@ -164,7 +167,6 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "amount due each month:"
         textField.borderStyle = .roundedRect
-        textField.font = UIFont.systemFont(ofSize: 14)
         return textField
     }()
     
@@ -173,7 +175,6 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "due date:"
         textField.borderStyle = .roundedRect
-        textField.font = UIFont.systemFont(ofSize: 14)
         textField.text = StaticFunctions.convertDateToString(date: Date())
         return textField
     }()

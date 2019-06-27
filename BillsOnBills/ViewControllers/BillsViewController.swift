@@ -41,6 +41,11 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addButton)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("helo")
+    }
 
     // MARK: - Table view data source
     
@@ -80,18 +85,24 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: sectionHeaderHeight))
         headerView.backgroundColor = Constants.lightGrayColor
         
-        headerView.addSubview(sectionTitle)
+        let sectionTitle = UILabel()
+        sectionTitle.translatesAutoresizingMaskIntoConstraints = false
+        sectionTitle.textAlignment = .center
+        sectionTitle.font = UIFont(name: Constants.universalFont, size: 15)
+        sectionTitle.textColor = Constants.grayMainColor
         
-        sectionTitle.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
-        sectionTitle.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
-    
         if section == 0 {
             // FIXME: - This is not showing up in the section header for some reason
             sectionTitle.text = "Unpaid - \(BillController.shared.sumOfBillsUnpaid())"
         } else {
             sectionTitle.text = "Paid - \(BillController.shared.sumOfBillsPaid())"
         }
-
+        
+        headerView.addSubview(sectionTitle)
+        
+        sectionTitle.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
+        sectionTitle.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
+        
         return headerView
     }
     
@@ -155,15 +166,6 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         label.sizeToFit()
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let sectionTitle: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.font = UIFont(name: Constants.universalFont, size: 15)
-        label.textColor = Constants.grayMainColor
         return label
     }()
 }
