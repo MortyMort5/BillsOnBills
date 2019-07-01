@@ -90,7 +90,7 @@ class BillController {
     
     func sumOfBills() -> String {
         let totalAmount = self.bills.reduce(0, { $0 + $1.amountDue})
-        return "Total: \n\(String(format: "$%.02f", totalAmount))"
+        return "Total: \n\(StaticFunctions.currencyFormatter(currency: totalAmount))"
     }
     
     func sumOfBillsUnpaid() -> String {
@@ -100,7 +100,7 @@ class BillController {
                 totalMonthlyAmount = totalMonthlyAmount + bill.amountDue
             }
         }
-        return String(format: "$%.02f", totalMonthlyAmount)
+        return StaticFunctions.currencyFormatter(currency: totalMonthlyAmount)
     }
     
     func sumOfBillsPaid() -> String {
@@ -110,7 +110,7 @@ class BillController {
                 totalMonthlyAmount = totalMonthlyAmount + bill.amountDue
             }
         }
-        return String(format: "$%.02f", totalMonthlyAmount)
+        return StaticFunctions.currencyFormatter(currency: totalMonthlyAmount)
     }
     
     // MARK: - Date Modifier Functions

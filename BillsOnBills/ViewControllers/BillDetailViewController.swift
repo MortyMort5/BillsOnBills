@@ -60,8 +60,14 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
             let amountDueString = amountDueTextfield.text, !amountDueString.isEmpty,
             let dueDateString = dueDateTextField.text, !dueDateString.isEmpty else { return }
         
-        var amountDueStr = amountDueString
-        amountDueStr.remove(at: amountDueStr.startIndex)
+        var amountDueStr = ""
+        for str in amountDueString {
+            if str == "$" || str == "," {
+                // do nothing
+            } else {
+                amountDueStr.append(str)
+            }
+        }
         
         guard let amountDueDouble = Float(amountDueStr) else { return }
         

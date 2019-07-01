@@ -42,4 +42,12 @@ class StaticFunctions {
         var calendar = Calendar.current
         return calendar.startOfDay(for: Date())
     }
+    
+    static func currencyFormatter(currency: Float) -> String {
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.locale = Locale.current
+        return "\(currencyFormatter.string(from: currency as NSNumber)!)"
+    }
 }

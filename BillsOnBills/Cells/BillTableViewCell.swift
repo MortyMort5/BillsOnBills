@@ -13,7 +13,7 @@ class BillTableViewCell: UITableViewCell {
     func updateView() {
         guard let bill = self.bill else { return }
         self.billNameLabel.text = bill.name
-        self.amountDueLabel.text = String(format: "$%.02f", bill.amountDue)
+        self.amountDueLabel.text = StaticFunctions.currencyFormatter(currency: bill.amountDue)
         self.dueDateLabel.text = StaticFunctions.convertDateToString(date: bill.dueDate!)
         
         if bill.isPaid {
