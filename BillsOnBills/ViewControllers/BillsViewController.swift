@@ -17,7 +17,7 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let displayWidth: CGFloat = self.view.frame.width
         let displayHeight: CGFloat = self.view.frame.height
         
-        tableView = UITableView(frame: CGRect(x: 0, y: barHeight + barHeight + 120, width: displayWidth, height: displayHeight - barHeight))
+        tableView = UITableView(frame: CGRect(x: 0, y: barHeight + barHeight + 120, width: displayWidth, height: displayHeight - barHeight - 140))
         tableView.register(BillTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
         tableView.dataSource = self
