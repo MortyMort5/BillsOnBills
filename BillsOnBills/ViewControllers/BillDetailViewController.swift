@@ -82,10 +82,11 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
             bill.name = name
             bill.amountDue = amountDue
             bill.dueDate = date
+            bill.isAutoPay = autoPaySwitch.isOn
             BillController.shared.updateBill(bill: bill)
         } else {
             // create bill
-            BillController.shared.addBill(name: name, amountDue: amountDue, dueDate: date)
+            BillController.shared.addBill(name: name, amountDue: amountDue, dueDate: date, autoPay: autoPaySwitch.isOn)
         }
 
         navigationController?.popViewController(animated: true)
@@ -117,7 +118,21 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         dayPickerView.delegate = self
         dayPickerView.dataSource = self
         
+        autoPayContainer.addSubview(autoPayLabel)
+        autoPayContainer.addSubview(autoPaySwitch)
+        
+        autoPayLabel.leadingAnchor.constraint(equalTo: self.autoPayContainer.leadingAnchor).isActive = true
+        autoPayLabel.topAnchor.constraint(equalTo: self.autoPayContainer.topAnchor).isActive = true
+        autoPayLabel.bottomAnchor.constraint(equalTo: self.autoPayContainer.bottomAnchor).isActive = true
+        autoPayLabel.widthAnchor.constraint(equalTo: self.autoPayContainer.widthAnchor, multiplier: 0.3).isActive = true
+        
+        autoPaySwitch.leadingAnchor.constraint(equalTo: self.autoPayLabel.trailingAnchor, constant: 5).isActive = true
+        autoPaySwitch.topAnchor.constraint(equalTo: self.autoPayContainer.topAnchor).isActive = true
+        autoPaySwitch.bottomAnchor.constraint(equalTo: self.autoPayContainer.bottomAnchor).isActive = true
+        autoPaySwitch.trailingAnchor.constraint(equalTo: self.autoPayContainer.trailingAnchor).isActive = true
+        
         stackView.addArrangedSubview(nameTextfield)
+        stackView.addArrangedSubview(autoPayContainer)
         stackView.addArrangedSubview(amountDueTextfield)
         stackView.addArrangedSubview(dueDateTextField)
         stackView.addArrangedSubview(dayPickerView)
@@ -145,6 +160,7 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         amountDueTextfield.text = String(format: "$%.02f", bill.amountDue)
         self.updateDueDateTextField(day: Calendar.current.component(.day, from: bill.dueDate!))
         dayPickerView.selectRow(Calendar.current.component(.day, from: bill.dueDate!) - 1, inComponent: 0, animated: true)
+        autoPaySwitch.isOn = bill.isAutoPay
     }
     
     // MARK: - Properties
@@ -199,5 +215,26 @@ class BillDetailViewController: UIViewController, UITextFieldDelegate, UIPickerV
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.backgroundColor = .white
         return picker
+    }()
+    
+    let autoPayContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let autoPayLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "AutoPay:"
+        label.textAlignment = .left
+        return label
+    }()
+    
+    let autoPaySwitch: UISwitch = {
+        let autoPaySwitch = UISwitch()
+        autoPaySwitch.translatesAutoresizingMaskIntoConstraints = false
+        autoPaySwitch.isOn = false
+        return autoPaySwitch
     }()
 }

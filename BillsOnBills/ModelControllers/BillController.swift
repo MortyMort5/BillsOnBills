@@ -57,8 +57,8 @@ class BillController {
     
     // MARK: - C.R.U.D
     
-    func addBill(name: String, amountDue: Float, dueDate: Date) {
-        let bill = Bill(name: name, amountDue: amountDue, dueDate: dueDate)
+    func addBill(name: String, amountDue: Float, dueDate: Date, autoPay: Bool) {
+        let bill = Bill(name: name, amountDue: amountDue, dueDate: dueDate, isAutoPay: autoPay)
         saveToPersistentStore()
         NotificationCenter.default.post(name: newBillAdded, object: nil)
         self.appDelegate?.scheduleNotification(forBill: bill)

@@ -44,6 +44,7 @@
 		C84A192922C2D08800707B2C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C84A192B22C2E26000707B2C /* User+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Convenience.swift"; sourceTree = "<group>"; };
 		C85C3AB322BC64AE00B2C7CB /* BillDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillDetailViewController.swift; sourceTree = "<group>"; };
+		C8E572D722CAFE5800B57EA3 /* BillsOnBills v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "BillsOnBills v2.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -435,9 +436,10 @@
 		B37DB9F422B2BCFE00524C46 /* BillsOnBills.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C8E572D722CAFE5800B57EA3 /* BillsOnBills v2.xcdatamodel */,
 				B37DB9F522B2BCFE00524C46 /* BillsOnBills.xcdatamodel */,
 			);
-			currentVersion = B37DB9F522B2BCFE00524C46 /* BillsOnBills.xcdatamodel */;
+			currentVersion = C8E572D722CAFE5800B57EA3 /* BillsOnBills v2.xcdatamodel */;
 			path = BillsOnBills.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

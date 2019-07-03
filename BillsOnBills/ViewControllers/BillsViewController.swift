@@ -66,6 +66,12 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let bill = BillController.shared.groupedBills[indexPath.section][indexPath.row]
         cell.bill = bill
         cell.delegate = self
+        
+        if bill.isPaid {
+            cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+        } else {
+            cell.backgroundColor = .white
+        }
         return cell
     }
     
