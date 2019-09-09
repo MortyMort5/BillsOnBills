@@ -43,8 +43,6 @@ class BillTableViewCell: UITableViewCell {
         self.contentView.addSubview(amountDueLabel)
         self.contentView.addSubview(dueDateLabel)
         self.contentView.addSubview(paidButton)
-        
-        
     }
     
     override func layoutSubviews() {
@@ -52,8 +50,8 @@ class BillTableViewCell: UITableViewCell {
         
         autoPayLabel.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor).isActive = true
         autoPayLabel.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor).isActive = true
-        autoPayLabel.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        autoPayLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        autoPayLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        autoPayLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         billNameLabel.leadingAnchor.constraint(equalTo: self.autoPayLabel.trailingAnchor, constant: 5).isActive = true
         billNameLabel.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor).isActive = true
@@ -135,7 +133,7 @@ class BillTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.text = "A"
-        label.layer.cornerRadius = 12.5
+        label.layer.cornerRadius = 10
         return label
     }()
 }

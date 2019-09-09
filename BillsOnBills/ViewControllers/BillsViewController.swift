@@ -25,7 +25,7 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         let topView: UIView = UIView(frame: CGRect(x: 0, y: barHeight + barHeight, width: displayWidth, height: 120))
         topView.addSubview(totalLabel)
-        topView.backgroundColor = Constants.blueColor
+        topView.backgroundColor = .white
         self.view.addSubview(topView)
         
         totalLabel.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true
@@ -40,11 +40,6 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.navigationItem.title = "BILLS"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addButton)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print("helo")
     }
 
     // MARK: - Table view data source
@@ -98,7 +93,6 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
         sectionTitle.textColor = Constants.grayMainColor
         
         if section == 0 {
-            // FIXME: - This is not showing up in the section header for some reason
             sectionTitle.text = "Unpaid - \(BillController.shared.sumOfBillsUnpaid())"
         } else {
             sectionTitle.text = "Paid - \(BillController.shared.sumOfBillsPaid())"
@@ -157,7 +151,7 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
     let addButton: UIButton = {
         let button = UIButton()
         button.setTitle("+", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: Constants.universalFont, size: 40)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -166,7 +160,7 @@ class BillsViewController: UIViewController, UITableViewDataSource, UITableViewD
     let totalLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: Constants.universalFont, size: 25)
-        label.textColor = .white
+        label.textColor = Constants.grayMainColor
         label.textAlignment = .center
         label.text = "Total: \n$0.00"
         label.sizeToFit()

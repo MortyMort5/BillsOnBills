@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navController = UINavigationController(rootViewController: billsVC)
         
         let navBarAppearance = UINavigationBar.appearance()
-        navBarAppearance.barTintColor = Constants.blueColor
+        navBarAppearance.barTintColor = Constants.grayMainColor
         navBarAppearance.tintColor = .white
         navBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         

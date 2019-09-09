@@ -13,6 +13,7 @@ class BillController {
     
     init() {
         checkLoginDateForUser()
+        checkWhichBillsArePaid()
     }
     
     // MARK: - Manage User
@@ -30,26 +31,20 @@ class BillController {
     }
     
     func checkLoginDateForUser() {
-        print("6")
         if let user = self.user {
-            print("1")
             if let lastDate = user.lastLoggedInDate {
-                print("2")
                 if !lastDate.isInSameMonth(date: Date()) {
-                    print("3")
                     // new month since logged in last
                     // update users lastLoggedInDate property
                     self.updateUser(user: user)
                     // update all the bills dates to this month
-//                    self.updateBillDates()
+                    self.updateBillDates()
                 }
             } else {
-                print("4")
                 // no last logged in Date
                 self.updateUser(user: user)
             }
         } else {
-            print("5")
             // no User
             self.addUser()
         }
@@ -78,6 +73,15 @@ class BillController {
         } catch let error {
             print("Error deleting bill : \(error.localizedDescription)")
         }
+    }
+    
+    func checkWhichBillsArePaid() {
+        for bill in self.bills {
+            if bill.dueDate!.isInThePast && bill.isAutoPay {
+                bill.isPaid = true
+            }
+        }
+        self.saveToPersistentStore()
     }
     
     func updateBill(bill: Bill) {
@@ -115,42 +119,29 @@ class BillController {
     
     // MARK: - Date Modifier Functions
     
-//    if bill.dueDate! < Date() && !Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date()) && bill.isPaid  {
-//    bill.dueDate = self.updateDateOfBill(bill: bill)
-//    self.updateBill(bill: bill)
-//    }
-//    if bill.dueDate!.isInSameMonth(date: Date()) {
-//
-//    }
-    
     func updateBillDates() {
         for bill in self.bills {
-            /*
-             - add months to each bill date until bill.dueDate is in the same month as Date()
-             - Set all isPaid properties to false
-             */
+            bill.dueDate = self.updateDate(date: bill.dueDate!)
+            bill.isPaid = false
         }
+        self.saveToPersistentStore()
     }
     
-    func updateDateOfBill(bill: Bill) -> Date {
-        var flag = false
-        while !flag {
-            if bill.dueDate! < Date() && !Calendar.current.isDate(bill.dueDate!, inSameDayAs: Date())  {
-                bill.dueDate = StaticFunctions.addAMonthToDate(date: bill.dueDate!)
-            } else {
-                flag = true
-            }
-        }
-        return bill.dueDate!
-    }
-    
-    // MARK: - Reset all Data
-    
-    func resetAllBillsForNewMonth() {
-        /*
-         - add a month to all the dates
-         - change all isPaid properties to false
-         */
+    func updateDate(date: Date) -> Date {
+        let oldMonth = Calendar.current.component(.month, from: date) // 6
+        let newMonth = Calendar.current.component(.month, from: Date()) // 8
+        
+        let oldYear = Calendar.current.component(.year, from: date)
+        let newYear = Calendar.current.component(.year, from: Date())
+        
+        var dateComp = DateComponents()
+        dateComp.day = 0
+        dateComp.month = newMonth - oldMonth
+        dateComp.year = newYear - oldYear
+        
+        guard let newDate = Calendar.current.date(byAdding: dateComp, to: date) else { return Date() }
+        
+        return newDate
     }
     
     // MARK: - Helper Functions
